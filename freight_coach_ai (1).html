@@ -1,0 +1,648 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body, div { font-family: var(--font-sans); }
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background: var(--color-background-primary);
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+.brand span { color: #d97706; }
+
+.pill-group { display: flex; gap: 4px; }
+.pill {
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.pill:hover { border-color: #d97706; color: #d97706; }
+.pill.active { background: #d97706; border-color: #d97706; color: #fff; }
+
+.diff-group { display: flex; gap: 3px; margin-left: auto; }
+.diff-btn {
+  padding: 3px 10px;
+  border-radius: 14px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+  transition: all 0.15s;
+}
+.diff-btn:hover { color: var(--color-text-primary); }
+.diff-btn.d-easy   { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
+.diff-btn.d-medium { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+.diff-btn.d-hard   { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+
+.body { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar {
+  width: 200px;
+  border-right: 0.5px solid var(--color-border-tertiary);
+  overflow-y: auto;
+  flex-shrink: 0;
+  background: var(--color-background-secondary);
+  padding: 10px 8px;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--color-border-secondary); border-radius: 2px; }
+
+.s-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  padding: 4px 6px 6px;
+}
+.s-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0.5px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.13s;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: var(--font-sans);
+  line-height: 1.4;
+}
+.s-btn:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+.s-btn.active { background: var(--color-background-primary); color: #d97706; border-color: #fcd34d; }
+.s-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+.s-name { font-weight: 500; font-size: 12px; }
+.s-sub  { font-size: 10.5px; color: var(--color-text-tertiary); }
+
+.chat { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.chat-header {
+  padding: 8px 14px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  background: var(--color-background-secondary);
+}
+.chat-title { font-weight: 500; color: var(--color-text-primary); font-size: 13px; }
+.diff-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+}
+.badge-easy   { background: #d1fae5; color: #065f46; }
+.badge-medium { background: #fef3c7; color: #92400e; }
+.badge-hard   { background: #fee2e2; color: #991b1b; }
+.chat-sub { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.messages::-webkit-scrollbar { width: 3px; }
+.messages::-webkit-scrollbar-thumb { background: var(--color-border-secondary); border-radius: 2px; }
+
+.msg { display: flex; gap: 8px; max-width: 100%; }
+.msg.user { flex-direction: row-reverse; align-self: flex-end; max-width: 85%; }
+
+.avatar {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: #fff;
+}
+.avatar.ai   { background: #d97706; }
+.avatar.user { background: var(--color-background-tertiary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+
+.bubble {
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.65;
+  max-width: 560px;
+}
+.msg.ai .bubble {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  color: var(--color-text-primary);
+  border-top-left-radius: 3px;
+}
+.msg.user .bubble {
+  background: #d97706;
+  color: #fff;
+  border-top-right-radius: 3px;
+}
+.bubble b { font-weight: 500; }
+.bubble .ctag {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  margin: 0 2px 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.ctag.good { background: #d1fae5; color: #065f46; }
+.ctag.warn { background: #fef3c7; color: #92400e; }
+.ctag.fix  { background: #fee2e2; color: #991b1b; }
+.ctag.tip  { background: #ede9fe; color: #5b21b6; }
+
+.typing { display: flex; gap: 8px; padding: 0 16px 6px; }
+.typing-dots {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 10px;
+  border-top-left-radius: 3px;
+  padding: 10px 14px;
+  display: flex; gap: 4px; align-items: center;
+}
+.dot { width: 5px; height: 5px; background: var(--color-text-tertiary); border-radius: 50%; animation: blink 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100%{opacity:0.3;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+.hidden { display: none !important; }
+
+.quick-prompts {
+  padding: 0 14px 8px;
+  display: flex; gap: 5px; flex-wrap: wrap;
+}
+.qp {
+  padding: 3px 10px;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.13s;
+  font-family: var(--font-sans);
+}
+.qp:hover { border-color: #d97706; color: #d97706; }
+
+.input-area {
+  padding: 10px 14px;
+  border-top: 0.5px solid var(--color-border-tertiary);
+  display: flex; gap: 7px; align-items: flex-end;
+}
+.input-wrap {
+  flex: 1;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 8px;
+  display: flex; align-items: flex-end;
+  background: var(--color-background-secondary);
+  transition: border-color 0.2s;
+}
+.input-wrap:focus-within { border-color: #d97706; }
+textarea {
+  flex: 1;
+  background: transparent;
+  border: none; outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 7px 10px;
+  resize: none;
+  max-height: 100px;
+  line-height: 1.5;
+}
+textarea::placeholder { color: var(--color-text-tertiary); }
+.send-btn {
+  width: 32px; height: 32px;
+  background: #d97706;
+  border: none; border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  font-size: 13px;
+  transition: opacity 0.15s;
+}
+.send-btn:hover { opacity: 0.85; }
+.send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.score-bar {
+  display: flex;
+  gap: 10px;
+  padding: 6px 14px;
+  border-top: 0.5px solid var(--color-border-tertiary);
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  align-items: center;
+  background: var(--color-background-secondary);
+  flex-wrap: wrap;
+}
+.score-item { display: flex; align-items: center; gap: 4px; }
+.sdot { width: 6px; height: 6px; border-radius: 50%; }
+.sdot.g { background: #10b981; }
+.sdot.a { background: #f59e0b; }
+.sdot.r { background: #ef4444; }
+.scount { font-weight: 500; color: var(--color-text-primary); }
+.score-hint { margin-left: auto; font-size: 10.5px; color: var(--color-text-tertiary); }
+</style>
+
+<div id="app">
+  <div class="top-bar">
+    <div class="brand">Freight<span>Coach</span> AI</div>
+    <div class="pill-group">
+      <button class="pill active" id="pill-sales" onclick="setMode('sales')">Sales</button>
+      <button class="pill" id="pill-quote" onclick="setMode('quote')">Quoting</button>
+      <button class="pill" id="pill-am" onclick="setMode('am')">Account Mgmt</button>
+    </div>
+    <div class="diff-group">
+      <button class="diff-btn d-easy" id="d-easy" onclick="setDiff('easy')">Rookie</button>
+      <button class="diff-btn" id="d-medium" onclick="setDiff('medium')">Grinder</button>
+      <button class="diff-btn" id="d-hard" onclick="setDiff('hard')">Brutal</button>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="sidebar" id="sidebar"></div>
+
+    <div class="chat">
+      <div class="chat-header">
+        <span class="chat-title" id="chat-title">Sales Coach</span>
+        <span class="diff-badge badge-easy" id="diff-badge">Rookie</span>
+        <span class="chat-sub" id="chat-sub">Role-play calls · Handle objections · Close more deals</span>
+      </div>
+
+      <div class="messages" id="messages"></div>
+
+      <div class="typing hidden" id="typing">
+        <div class="avatar ai">AI</div>
+        <div class="typing-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="quick-prompts" id="qps"></div>
+
+      <div class="input-area">
+        <div class="input-wrap">
+          <textarea id="inp" rows="1" placeholder="Type your response or ask for coaching..."
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        </div>
+        <button class="send-btn" id="sendBtn" onclick="send()">&#10148;</button>
+      </div>
+
+      <div class="score-bar">
+        <span style="font-weight:500;color:var(--color-text-primary);font-size:11px;">Session:</span>
+        <span class="score-item"><span class="sdot g"></span><span class="scount" id="sg">0</span> strong</span>
+        <span class="score-item"><span class="sdot a"></span><span class="scount" id="so">0</span> ok</span>
+        <span class="score-item"><span class="sdot r"></span><span class="scount" id="sb">0</span> needs work</span>
+        <span class="score-hint">Type "coach me" anytime for feedback</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let mode = 'sales', diff = 'easy', scenario = 'cold-call';
+let history = [], loading = false;
+let sc = {g:0, o:0, b:0};
+
+const DIFF = {
+  easy:   { label:'Rookie',  cls:'d-easy',   badge:'badge-easy',   sys:`DIFFICULTY — ROOKIE: prospect is mildly skeptical but open. Standard objections. Won't be rude. Good for beginners.` },
+  medium: { label:'Grinder', cls:'d-medium',  badge:'badge-medium', sys:`DIFFICULTY — GRINDER: prospect is busy, dismissive, gives real pushback. They interrupt. They've heard every broker pitch. Skeptical but not impossible.` },
+  hard:   { label:'Brutal',  cls:'d-hard',    badge:'badge-hard',   sys:`DIFFICULTY — BRUTAL: prospect is aggressive, impatient, hostile. Cuts you off. Challenges everything. Has been burned by brokers and says so loudly. Uses hard objections like: "I don't work with brokers. Period." / "Your company is tiny — why would I trust you?" / "My broker has been with me 8 years — you have nothing." / "I've had brokers ghost me mid-load. You're all the same." / "Stop reading from a script." Will hang up if the rep wastes their time. After a hang-up, rep gets one more shot — same prospect, called back.` }
+};
+
+const MODES = {
+  sales: {
+    title:'Sales Coach', sub:'Role-play calls · Handle objections · Close more deals',
+    sys:`You are FreightCoach AI — a no-nonsense freight brokerage sales trainer specializing in FTL dry van and flatbed/specialized freight. Help new reps (0-6 months) get battle-hardened through realistic role-play.
+
+Stay in character as the prospect until the rep says "coach me", "feedback", or "what did I do wrong".
+
+When coaching use exactly:
+✅ [what they did well]
+⚠️ [what to fix]
+💡 [exact words to try instead]
+
+Prospect personas: logistics manager at Midwest manufacturer, shipping coordinator at construction co (flatbed), small distribution owner, VP Supply Chain who's seen it all.
+
+Industry terms you know: DAT rates, spot market, contract lanes, load board, FTL dry van, flatbed, step deck, tarps, OS/OW permits, accessorials, fuel surcharge, deadhead, carrier, shipper, broker.
+
+SCORING: After each rep response (not coaching), end your message with one of these on its own line — nothing else on that line:
+[SCORE:good] [SCORE:ok] or [SCORE:bad]`
+  },
+  quote: {
+    title:'Quote Helper', sub:'FTL & Flatbed rate logic · Build margin · Present price',
+    sys:`You are FreightCoach AI — expert freight quoting coach for FTL dry van and flatbed/specialized freight.
+
+Teach: DAT rate checking · lane analysis · truck supply vs demand · FTL dry van typical rates · flatbed accessorials (tarps $150-300, permits $50-500+, pilot cars) · margin building (carrier cost + $200-500 = customer rate) · hot market pricing · presenting price without flinching · handling "too high" pushback.
+
+Never quote blind. Always check the market first. Walk step-by-step. Use real numbers.
+
+SCORING: After role-play responses, end with: [SCORE:good] [SCORE:ok] or [SCORE:bad]`
+  },
+  am: {
+    title:'Account Manager', sub:'Retain accounts · Grow volume · Handle service issues',
+    sys:`You are FreightCoach AI — freight brokerage account management coach.
+
+Teach: weekly touchpoint cadence · know customer shipping calendar · silence = red flag · service failures: own it fast, solution before you call · upsell by uncovering all lanes · retention vs price competition · build relationships beyond one contact · rate increase delivery.
+
+Apply difficulty level when role-playing client conversations.
+
+SCORING: After role-play responses, end with: [SCORE:good] [SCORE:ok] or [SCORE:bad]`
+  }
+};
+
+const SCENARIOS = {
+  'cold-call':    { mode:'sales', name:'Cold Call Opener', sub:'Get past the gate', icon:'📞',
+    prompt:`Cold call practice. I'm a logistics manager at a manufacturing plant in Columbus, Ohio — 30 FTL dry van loads a month. I get broker calls constantly. I just picked up. Go ahead.`,
+    qp:["Hi, is this the shipping department?","I'll get straight to the point — we move FTL freight cheaper and more reliably than your current broker","Coach me on cold call openers"] },
+
+  'already-broker': { mode:'sales', name:'"We have a broker"', sub:'Most common brush-off', icon:'🚫',
+    prompt:`You got through your opener. I just said: **"We're all set — we already have a broker and we're happy with them."** How do you respond?`,
+    qp:["That's great — mind if I ask who you use?","Fair enough — what would it take to earn just one lane?","Coach me on this objection"] },
+
+  'rate-high':    { mode:'sales', name:'"Your rates are too high"', sub:'Price objection', icon:'💰',
+    prompt:`You sent over a quote. I just called you and said: **"Your rate is $250 higher than my current broker. Why would I pay that?"** Go.`,
+    qp:["Let me see what I can do","Can I ask what carrier they're putting on it?","Walk me through why our service is worth more"] },
+
+  'not-interested': { mode:'sales', name:'"Not interested"', sub:'Hard wall — break through', icon:'👋',
+    prompt:`You've barely gotten two sentences out and I just said: **"Not interested. We're good."** I'm clearly about to hang up. You have about 5 seconds. What do you say?`,
+    qp:["I hear you — one quick question before I let you go","Totally understand — I won't waste your time, but...","Coach me — how do I handle a hard no?"] },
+
+  'bad-experience': { mode:'sales', name:'"Brokers burned me"', sub:'Trust destroyer', icon:'😤',
+    prompt:`You've got me talking, but I just said: **"Look, I've used brokers before. They overpromise, underdeliver, and ghost me when loads go sideways. I have zero interest in going through that again."** Now what?`,
+    qp:["I completely understand — what happened?","That's a fair concern. Here's what makes us different...","Coach me on rebuilding trust"] },
+
+  'owner-op':     { mode:'sales', name:'"We use our own trucks"', sub:'Asset-based prospect', icon:'🤝',
+    prompt:`I'm the owner of a small manufacturing company. I just said: **"We've got our own trucks. We don't need a broker."** But you know companies like mine always have overflow freight. How do you handle this?`,
+    qp:["That's great — do your trucks cover every lane you need?","What do you do when your trucks are full and a customer needs a pickup?","Coach me on the asset-based objection"] },
+
+  'callback':     { mode:'sales', name:'"Call me back later"', sub:'Soft no / stall', icon:'📅',
+    prompt:`I just said: **"Yeah send me some info and call me back next month. Really busy right now."** This is almost always a soft no. What do you say?`,
+    qp:["Absolutely — what's the best email?","Before I let you go — one quick question...","Coach me on not getting stalled"] },
+
+  'closing':      { mode:'sales', name:'Closing the Deal', sub:'Convert warm lead to load', icon:'✅',
+    prompt:`Good call — I've warmed up and said: **"Yeah, we'd be open to trying you on a load."** Now you need to actually get this on the books. Walk me through exactly what you say next.`,
+    qp:["Great! What lane is coming up for you?","When's your next shipment going out?","Coach me on closing technique"] },
+
+  'flatbed-pitch': { mode:'sales', name:'Flatbed Pitch', sub:'Sell complex freight', icon:'🚛',
+    prompt:`I'm the logistics manager at a construction materials company — we ship steel beams, lumber, pre-fab components. Heavy flatbed freight. I've heard your opener. Tell me why I should use you for my flatbed.`,
+    qp:["We specialize in flatbed with a vetted carrier network","Tell me about your current flatbed pain points","Coach me on flatbed pitch"] },
+
+  'ftl-quote':    { mode:'quote', name:'FTL Dry Van Quote', sub:'Build it right', icon:'🚚',
+    prompt:`A customer just called: **"I need a truck from Chicago IL to Atlanta GA. 40,000 lbs, standard dry van, ready Monday."** Walk me through how you build this quote. What's your first step?`,
+    qp:["Check DAT for the lane","Ask what they've been paying","What's a fair margin here?"] },
+
+  'flatbed-quote': { mode:'quote', name:'Flatbed + Tarps Quote', sub:'Accessorials & complexity', icon:'🏗️',
+    prompt:`Customer needs: **Steel I-beams, 42 feet, 38,000 lbs, Pittsburgh PA to Houston TX. Needs to be tarped.** What are all the cost factors? Build this with me step by step.`,
+    qp:["What's the base rate for this lane?","How much do tarps add?","Do I need a permit?"] },
+
+  'hot-market':   { mode:'quote', name:'Hot Market / Tight Trucks', sub:'Quote when capacity is scarce', icon:'🔥',
+    prompt:`It's peak season — truck capacity is extremely tight on the Chicago to Dallas lane. You found ONE carrier willing to move it but they're asking $2,800. Your customer is expecting a quote around $2,200. How do you handle this?`,
+    qp:["Present the $2,800 and explain the market","Ask the customer for flexibility","Coach me on quoting in a hot market"] },
+
+  'margin':       { mode:'quote', name:'Building Margin', sub:'Price to profit', icon:'📊',
+    prompt:`Let's talk margin. New reps either squeeze too thin (and lose money when things go wrong) or price themselves out entirely. Ask me anything about margin, or give me a scenario you're unsure about.`,
+    qp:["What's a typical FTL dry van margin?","When should I go higher on margin?","How do I defend my rate when pushed back?"] },
+
+  'present-price': { mode:'quote', name:'Presenting Price', sub:'Say the number with confidence', icon:'🎯',
+    prompt:`You need to quote $2,400 on a Chicago to Dallas FTL lane. Carrier cost is $1,950. Walk me through word-for-word exactly what you say to the customer when you call with this rate.`,
+    qp:["I've got a rate for you — it comes out to $2,400","Show me how to sound confident on price","What if they say it's too high?"] },
+
+  'lane-analysis': { mode:'quote', name:'Lane Analysis', sub:'Read the market first', icon:'🗺️',
+    prompt:`Before you quote anything, you need to read the lane. Let's practice. **Memphis TN to Los Angeles CA. Dry van, 44,000 lbs.** What do you need to know about this lane before quoting a number?`,
+    qp:["Is this a truck-friendly or truck-scarce market?","What's the typical transit time?","How does seasonality affect this?"] },
+
+  'check-in':     { mode:'am', name:'Weekly Check-In', sub:'Stay top of mind', icon:'📲',
+    prompt:`Practice a weekly check-in. I'm your customer — a mid-sized manufacturer you've worked with 3 months. Things are fine, no major issues. What's your goal here and how do you open this call?`,
+    qp:["Hey, just wanted to check in!","Do you have anything moving this week?","What makes a check-in valuable vs. annoying?"] },
+
+  'at-risk':      { mode:'am', name:'At-Risk Account', sub:'Volume dropped — act fast', icon:'⚠️',
+    prompt:`Red flag. This account did 15 loads last month, only 3 this month. They've been slow to return calls. There was a minor service issue (4-hour late pickup) two weeks ago. What do you do right now?`,
+    qp:["Call them today — what do I say?","How do I know if they're shopping around?","Give me the script for this call"] },
+
+  'upsell':       { mode:'am', name:'Growing an Account', sub:'Uncover hidden lanes', icon:'📈',
+    prompt:`You currently move 3 lanes for this manufacturer — Chicago to Dallas, Atlanta, Memphis. All dry van. They're happy. You know they probably have more freight. How do you uncover and win it?`,
+    qp:["How do I ask about other lanes?","What questions uncover hidden freight?","How do I bring it up without being pushy?"] },
+
+  'shopping':     { mode:'am', name:'Client Shopping Around', sub:'Competitive threat', icon:'🔄',
+    prompt:`Your customer just said: **"I've been getting calls from other brokers with lower rates. I'm going to start shopping around if things don't improve."** What do you say?`,
+    qp:["I appreciate you telling me — what rate are you seeing?","What can I do to keep your business?","Coach me on retention language"] },
+
+  'service-fail': { mode:'am', name:'Service Failure Recovery', sub:'Carrier missed pickup', icon:'🔥',
+    prompt:`Your carrier just missed a pickup. It's now 3 hours late. Your customer's production line is waiting on this material and they're furious. You need to call them right now. What do you say?`,
+    qp:["I'm calling to address the pickup situation directly","Here's what I'm doing right now to fix it","Coach me on damage control"] },
+
+  'rate-increase': { mode:'am', name:'Delivering a Rate Increase', sub:'Market went up — now what?', icon:'📉',
+    prompt:`The spot market jumped. You need to tell your customer that rates on their main lane are going up $200/load starting next month. They've been with you 6 months and are price-sensitive. How do you deliver this news?`,
+    qp:["I wanted to give you advance notice about rate changes","Here's what's happening in the market right now","Coach me on delivering rate increases"] }
+};
+
+const MODE_SCENARIOS = {
+  sales: ['cold-call','already-broker','rate-high','not-interested','callback','bad-experience','owner-op','closing','flatbed-pitch'],
+  quote: ['ftl-quote','flatbed-quote','hot-market','margin','present-price','lane-analysis'],
+  am:    ['check-in','at-risk','upsell','shopping','service-fail','rate-increase']
+};
+
+function buildSidebar() {
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = '';
+  const label = document.createElement('div');
+  label.className = 's-label';
+  label.textContent = mode === 'sales' ? 'Sales Scenarios' : mode === 'quote' ? 'Quote Scenarios' : 'AM Scenarios';
+  sb.appendChild(label);
+  MODE_SCENARIOS[mode].forEach(key => {
+    const sc2 = SCENARIOS[key];
+    const btn = document.createElement('button');
+    btn.className = 's-btn' + (key === scenario ? ' active' : '');
+    btn.id = 'sb-' + key;
+    btn.innerHTML = `<span class="s-icon">${sc2.icon}</span><span><div class="s-name">${sc2.name}</div><div class="s-sub">${sc2.sub}</div></span>`;
+    btn.onclick = () => loadScenario(key);
+    sb.appendChild(btn);
+  });
+}
+
+function setMode(m) {
+  mode = m;
+  ['sales','quote','am'].forEach(x => document.getElementById('pill-'+x).classList.toggle('active', x===m));
+  scenario = MODE_SCENARIOS[m][0];
+  buildSidebar();
+  const M = MODES[m];
+  document.getElementById('chat-title').textContent = M.title;
+  document.getElementById('chat-sub').textContent = M.sub;
+  loadScenario(scenario);
+}
+
+function setDiff(d) {
+  diff = d;
+  ['easy','medium','hard'].forEach(x => {
+    const btn = document.getElementById('d-'+x);
+    btn.className = 'diff-btn' + (x===d ? ' ' + DIFF[x].cls : '');
+  });
+  const D = DIFF[d];
+  const badge = document.getElementById('diff-badge');
+  badge.textContent = D.label;
+  badge.className = 'diff-badge ' + D.badge;
+  if (history.length > 1) loadScenario(scenario);
+}
+
+function loadScenario(key) {
+  scenario = key;
+  history = [];
+  sc = {g:0,o:0,b:0};
+  updateScore();
+  document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+  const sb = document.getElementById('sb-'+key);
+  if (sb) sb.classList.add('active');
+  const S = SCENARIOS[key];
+  clearMsgs();
+  setQPs(S.qp || []);
+  addMsg('ai', S.prompt);
+  history = [{ role:'assistant', content: S.prompt }];
+}
+
+function clearMsgs() { document.getElementById('messages').innerHTML = ''; }
+
+function addMsg(role, text) {
+  const msgs = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ' + role;
+  const av = document.createElement('div');
+  av.className = 'avatar ' + role;
+  av.textContent = role === 'ai' ? 'AI' : 'ME';
+  const bub = document.createElement('div');
+  bub.className = 'bubble';
+  bub.innerHTML = fmt(text);
+  wrap.appendChild(av);
+  wrap.appendChild(bub);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function fmt(t) {
+  return t
+    .replace(/\[SCORE:[^\]]+\]/g, '')
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/✅\s*(.*?)(<br>|$)/g, '<span class="ctag good">Strong</span> $1<br>')
+    .replace(/⚠️\s*(.*?)(<br>|$)/g, '<span class="ctag warn">Fix this</span> $1<br>')
+    .replace(/💡\s*(.*?)(<br>|$)/g, '<span class="ctag tip">Try this</span> $1<br>')
+    .replace(/\n/g, '<br>');
+}
+
+function setQPs(arr) {
+  const c = document.getElementById('qps');
+  c.innerHTML = '';
+  arr.forEach(p => {
+    const b = document.createElement('button');
+    b.className = 'qp'; b.textContent = p;
+    b.onclick = () => { document.getElementById('inp').value = p; send(); };
+    c.appendChild(b);
+  });
+}
+
+function updateScore() {
+  document.getElementById('sg').textContent = sc.g;
+  document.getElementById('so').textContent = sc.o;
+  document.getElementById('sb').textContent = sc.b;
+}
+
+async function send() {
+  if (loading) return;
+  const inp = document.getElementById('inp');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = ''; autoResize(inp);
+  addMsg('user', text);
+  history.push({ role:'user', content: text });
+  setLoading(true);
+  try {
+    const M = MODES[mode];
+    const sysPrompt = M.sys + '\n\n' + DIFF[diff].sys;
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: sysPrompt,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Something went wrong. Try again.';
+    history.push({ role:'assistant', content: reply });
+    const scoreMatch = reply.match(/\[SCORE:(good|ok|bad)\]/);
+    if (scoreMatch) {
+      const s = scoreMatch[1];
+      if (s === 'good') sc.g++;
+      else if (s === 'ok') sc.o++;
+      else sc.b++;
+      updateScore();
+    }
+    addMsg('ai', reply);
+  } catch(e) {
+    addMsg('ai', 'Connection error — try again.');
+  }
+  setLoading(false);
+}
+
+function setLoading(v) {
+  loading = v;
+  document.getElementById('typing').classList.toggle('hidden', !v);
+  document.getElementById('sendBtn').disabled = v;
+  if (v) document.getElementById('messages').scrollTop = 9999;
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+buildSidebar();
+loadScenario('cold-call');
+</script>
